@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" style="shape-rendering: geometricprecision;">
+  <g transform="matrix(1, 0, 0, 1, 92.215149, 157.747787)">
+    <path class="fil0" d="M23 0l265 0c30,0 30,46 0,46l-265 0c-31,0 -31,-46 0,-46zm265 3l-265 0c-26,0 -26,40 0,40l265 0c26,0 26,-40 0,-40z" style="fill-rule: nonzero; fill: rgb(255, 255, 255);"/>
+    <path class="fil0" d="M293 26l6 6c1,1 -1,4 -2,2l-7 -6c-3,3 -8,2 -11,-1 -4,-4 -4,-9 -1,-13 4,-4 10,-4 14,0 3,3 3,8 1,12zm-12 -10c-2,3 -2,6 0,9 2,2 6,2 8,0 3,-3 3,-6 0,-9 -2,-2 -6,-2 -8,0z" style="fill-rule: nonzero; fill: rgb(255, 255, 255);"/>
+  </g>
+</svg>

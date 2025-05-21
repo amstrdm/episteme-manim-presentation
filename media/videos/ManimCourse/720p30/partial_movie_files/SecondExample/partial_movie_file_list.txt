@@ -1,0 +1,4 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/DATA/coding/manim_tutorial/media/videos/ManimCourse/720p30/partial_movie_files/SecondExample/2016333726_139950584_223132457.mp4'
+file 'file:C:/DATA/coding/manim_tutorial/media/videos/ManimCourse/720p30/partial_movie_files/SecondExample/543634251_2885011769_2577247952.mp4'
+file 'file:C:/DATA/coding/manim_tutorial/media/videos/ManimCourse/720p30/partial_movie_files/SecondExample/543634251_2844360058_2401632750.mp4'
