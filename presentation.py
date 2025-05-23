@@ -636,7 +636,7 @@ class Presentation(Slide):
         self.next_slide()
 
         line_sentiment_critical_start = path_process_sentiment.get_end()
-        line_sentiment_critical_end = line_sentiment_critical_start + LEFT * 4.3
+        line_sentiment_critical_end = line_sentiment_critical_start + LEFT * 3.8
 
         path_sentiment_critical = Line(line_sentiment_critical_start, line_sentiment_critical_end)
         path_sentiment_critical.set_z_index(-1)
@@ -648,12 +648,12 @@ class Presentation(Slide):
             fill_color=self.camera.background_color,
             fill_opacity=1
         )
-        critical_box.move_to(line_sentiment_critical_end)
-        critical_box.set_z_index(1)
+        critical_box.next_to(line_sentiment_critical_end, LEFT, buff=0)
+        critical_box.set_z_index(0)
 
         critical_t = Text("Kritik Auswertung", font_size=20)
         critical_t.move_to(critical_box.get_top() + DOWN * 0.3)
-        critical_t.set_z_index(2)
+        critical_t.set_z_index(1)
         self.play(Create(critical_box), Create(path_sentiment_critical), Write(critical_t))
         self.next_slide()
 
@@ -669,6 +669,7 @@ class Presentation(Slide):
             {"pulse": PresentationColors.ACCENT_NEUTRAL, "name": "Neutral"},
         ]
 
+        output_snippets_group = VGroup()
         for i in range(len(iteration_sentiments)):
             current_sentiment_color = iteration_sentiments[i]["pulse"]
             # Move snippet to start of path fluidly to avoid ugly adjustemnts to path
@@ -697,6 +698,12 @@ class Presentation(Slide):
                 run_time=0.8
             )
             self.wait(0.3)
-            stacked_group[i].set_color(current_sentiment_color)
-            self.play(MoveAlongPath(stacked_group[i], path_sentiment_critical), run_time=3)
+            self.play(stacked_group[i].animate.set_color(current_sentiment_color))
+            
+            self.play(MoveAlongPath(stacked_group[i], path_sentiment_critical), run_time=1.2)
+            output_snippets_group.add(stacked_group[i])
+            self.play(
+                output_snippets_group.animate.arrange(DOWN, buff=0.1).move_to(critical_box.get_center()),
+                run_time=0.8
+            )
             self.next_slide()
