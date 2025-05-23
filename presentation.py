@@ -239,8 +239,8 @@ def animate_neural_network_activation_loop(
 class Presentation(Slide):
     skip_reversing = True
     def construct(self):
-       # self.Scene1_Title()
-       # self.Scene2_Introduction()
+        # self.Scene1_Title()
+        # self.Scene2_Introduction()
         self.Scene3_Goals_and_Functionalities()
 
     def Scene1_Title(self):
@@ -442,18 +442,11 @@ class Presentation(Slide):
         
         cursor_height = goog_text.height * 0.9
         cursor = Line(ORIGIN, UP * cursor_height, stroke_width=3, color=WHITE)
-        cursor.align_to(goog_text, DOWN)
+        cursor.move_to(goog_text[0])
 
-        first_char = True
-        for char in goog_text:
-            if first_char:
-                cursor.next_to(char, LEFT, buff=0.05).align_to(goog_text, DOWN)
-                self.play(Create(cursor), run_time=0.3)
-            cursor.next_to(char, RIGHT, buff=0.05).align_to(goog_text, DOWN)
-            self.play(AddTextLetterByLetter(char), run_time=0.2)
-            self.play(Blink(cursor), run_time=0.2)
+        self.play(TypeWithCursor(goog_text, cursor))
+        self.play(Blink(cursor, blinks=2))
 
-            first_char = False
         self.play(FadeOut(cursor), run_time=0.2)
         
         self.next_slide()
@@ -536,7 +529,7 @@ class Presentation(Slide):
         processing_box.move_to(path_social_process.get_end() - 0.6*RIGHT)
         processing_box.set_z_index(1)
         
-        thesenextraktion_t = Text("Thesenextraktion", font_size=20)
+        thesenextraktion_t = Text("Thesenextrahierung", font_size=20)
         thesenextraktion_t.move_to(processing_box.get_top() + 0.3*DOWN)
         thesenextraktion_t.set_z_index(2)
         self.play(Create(path_social_process), Create(processing_box))  
@@ -613,11 +606,11 @@ class Presentation(Slide):
             fill_opacity=1
         )
         sentiment_box.move_to(line_process_sentiment_end)
-        sentiment_box.set_z_index(1)
+        sentiment_box.set_z_index(0)
 
         sentiment_t = Text("Sentiment Analyse", font_size=20)
         sentiment_t.move_to(sentiment_box.get_top() + DOWN * 0.3)
-        sentiment_t.set_z_index(2)
+        sentiment_t.set_z_index(1)
 
         self.play(Create(path_process_sentiment), Create(sentiment_box), Write(sentiment_t))
         
@@ -638,15 +631,15 @@ class Presentation(Slide):
             stacked_group.add(post_snippet)
         
         stacked_group.move_to(path_social_process.get_start())
+        stacked_group.set_z_index(0.5)
         self.play(MoveAlongPath(stacked_group, path_process_sentiment), run_time=4)
-        
         self.next_slide()
 
-        line_sentiment_critical_start = sentiment_box.get_left() + RIGHT * 1
+        line_sentiment_critical_start = path_process_sentiment.get_end()
         line_sentiment_critical_end = line_sentiment_critical_start + LEFT * 4.3
 
         path_sentiment_critical = Line(line_sentiment_critical_start, line_sentiment_critical_end)
-
+        path_sentiment_critical.set_z_index(-1)
         critical_box = RoundedRectangle(
             corner_radius=0.2,
             width=3,
@@ -678,7 +671,8 @@ class Presentation(Slide):
 
         for i in range(len(iteration_sentiments)):
             current_sentiment_color = iteration_sentiments[i]["pulse"]
-
+            # Move snippet to start of path fluidly to avoid ugly adjustemnts to path
+            self.play(stacked_group[i].animate.move_to(path_sentiment_critical.get_start()))
             # --- 1. Visual Scan of Box ---
             scan_line = Line(
                 [scan_line_x_center - scan_line_width / 2, scan_start_y, 0],
