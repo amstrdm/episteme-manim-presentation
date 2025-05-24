@@ -666,7 +666,7 @@ class Presentation(Slide):
         iteration_sentiments = [
             {"pulse": PresentationColors.ACCENT_BULLISH, "name": "Bullish"},
             {"pulse": PresentationColors.ACCENT_BEARISH, "name": "Bearish"},
-            {"pulse": PresentationColors.ACCENT_NEUTRAL, "name": "Neutral"},
+            {"pulse": PresentationColors.ACCENT_BULLISH, "name": "Bullish"},
         ]
 
         output_snippets_group = VGroup()
@@ -703,7 +703,169 @@ class Presentation(Slide):
             self.play(MoveAlongPath(stacked_group[i], path_sentiment_critical), run_time=1.2)
             output_snippets_group.add(stacked_group[i])
             self.play(
-                output_snippets_group.animate.arrange(DOWN, buff=0.1).move_to(critical_box.get_center()),
+                output_snippets_group.animate.arrange(DOWN, buff=0.2).move_to(critical_box.get_center()),
                 run_time=0.8
             )
             self.next_slide()
+
+        snippet_critiqued_group = VGroup()
+        # ===== 4. Critical Assessment for the current output_snippet =====
+        for idx, snippet in enumerate(output_snippets_group):
+            
+            
+            if idx == 0:
+                icon_char = "✗"
+                accent_color = PresentationColors.ACCENT_BEARISH
+                
+                circle = Circle(radius=0.2, color=accent_color)
+
+                icon = Text(icon_char, font_size=30, color=accent_color)
+                icon.move_to(circle.get_center())
+                
+                comment_icon_group = VGroup(circle, icon).scale(0.7)
+                comment_icon_group.move_to(snippet.get_corner(DR))
+                comment_icon_group.set_z_index(2)
+                self.play(Create(circle))
+                self.play(Create(icon))
+
+                checked_snippet_group = VGroup(snippet, comment_icon_group)
+                self.next_slide()
+                self.play(FadeOut(checked_snippet_group))
+            
+            elif idx == 1:
+                icon_char = "✓"
+                accent_color = PresentationColors.ACCENT_BULLISH
+                
+                circle = Circle(radius=0.2, color=accent_color)
+                icon = Text(icon_char, font_size=30, color=accent_color)
+                icon.move_to(circle.get_center())
+                
+                comment_icon_group = VGroup(circle, icon).scale(0.7)
+                comment_icon_group.move_to(snippet.get_corner(DR))
+                comment_icon_group.set_z_index(2)
+                
+                self.play(Create(circle))
+                self.play(Create(icon))
+
+                checked_snippet_group = VGroup(snippet, comment_icon_group)
+                self.next_slide()
+                self.play(FadeOut(comment_icon_group))
+                snippet_critiqued_group.add(snippet)
+
+            elif idx == 2:
+                icon_char = "-"
+                accent_color = PresentationColors.ACCENT_NEUTRAL
+                
+                circle = Circle(radius=0.2, color=accent_color)
+                icon = Text(icon_char, font_size=30, color=accent_color)
+                icon.move_to(circle.get_center())
+                
+                comment_icon_group = VGroup(circle, icon).scale(0.7)
+                comment_icon_group.move_to(snippet.get_corner(DR))
+                comment_icon_group.set_z_index(2)
+
+                self.play(Create(circle))
+                self.play(Create(icon))
+
+                checked_snippet_group = VGroup(snippet, comment_icon_group)
+                snippet_critiqued_group.add(checked_snippet_group)
+            
+            self.next_slide()
+        
+        # ===== 5. Setup Dashboard Box and Path from Critical Box =====
+        dashboard_box = RoundedRectangle(
+            corner_radius=0.2,
+            width=3.5,
+            height=critical_box.height * 1.2,
+            color=PresentationColors.ACCENT_MAIN,
+            fill_color=self.camera.background_color,
+            fill_opacity=1.0
+        )
+        dashboard_box.next_to(critical_box, LEFT, buff=1.0)
+        dashboard_box.set_z_index(0)
+
+        dashboard_t = Text("Dashboard", font_size=20, color=WHITE)
+        dashboard_t.next_to(dashboard_box.get_top(), DOWN, buff=0.1)
+        dashboard_t.set_z_index(1)
+
+        path_crit_to_dash = Line(
+            critical_box.get_center(),
+            dashboard_box.get_right(),
+            stroke_width=4,
+            color=PresentationColors.TEXT_PRIMARY
+        ).set_z_index(-1)
+
+        self.play(
+            Create(dashboard_box),
+            Write(dashboard_t),
+            Create(path_crit_to_dash),
+        )
+        self.next_slide()
+
+        # ===== 6. Create two zones inside Dashboard =====
+        zone_h = dashboard_box.height * 0.8
+        zone_w = (dashboard_box.width / 2) * 0.9
+
+        bullish_zone = RoundedRectangle(
+            width=zone_w, height=zone_h,
+            fill_color=PresentationColors.ACCENT_BULLISH, fill_opacity=0.3,
+            stroke_color=PresentationColors.ACCENT_BULLISH, stroke_width=2,
+            corner_radius=0.2
+        )
+        bearish_zone = RoundedRectangle(
+            width=zone_w, height=zone_h,
+            fill_color=PresentationColors.ACCENT_BEARISH, fill_opacity=0.3,
+            stroke_color=PresentationColors.ACCENT_BEARISH, stroke_width=2,
+            corner_radius=0.2
+        )
+
+        zones = VGroup(bullish_zone, bearish_zone).arrange(RIGHT, buff=0.2)
+        zones.move_to(dashboard_box.get_center() + DOWN * 0.2)
+        zones.set_z_index(1)
+
+        self.play(
+            DrawBorderThenFill(bullish_zone),
+            DrawBorderThenFill(bearish_zone)
+        )
+        self.next_slide()
+
+        # ===== 7. Move critiqued rows (snippet+icon) into their zones =====
+        # snippet_critiqued_group is a VGroup of VGroups: [snippet, icon]
+        # Move all rows along the path in one go
+        self.play(snippet_critiqued_group.animate.move_to(critical_box.get_center()))
+        self.play(
+            MoveAlongPath(
+                snippet_critiqued_group,
+                path_crit_to_dash,
+                run_time=1.5
+            )
+        )
+        self.next_slide()
+
+        # Split into bullish vs. bearish, keeping rows intact
+        bullish_rows = VGroup()
+        bearish_rows = VGroup()
+        for row in snippet_critiqued_group:
+            snippet = row[0]
+            if snippet.fill_color == PresentationColors.ACCENT_BULLISH:
+                bullish_rows.add(row)
+            else:
+                bearish_rows.add(row)
+
+        # Arrange each pile inside its zone, aligning left edges
+        anims = []
+        if bullish_rows:
+            anims.append(
+                bullish_rows.animate
+                    .arrange(DOWN, buff=0.1, aligned_edge=LEFT)
+                    .move_to(bullish_zone.get_center())
+            )
+        if bearish_rows:
+            anims.append(
+                bearish_rows.animate
+                    .arrange(DOWN, buff=0.1, aligned_edge=LEFT)
+                    .move_to(bearish_zone.get_center())
+            )
+
+        self.play(*anims, run_time=1.0)
+        self.next_slide()
