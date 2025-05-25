@@ -1,8 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:C:/DATA/coding/manim_tutorial/media/videos/presentation/1080p60/partial_movie_files/Scene1_Title/3977891868_2791357815_223132457.mp4'
-file 'file:C:/DATA/coding/manim_tutorial/media/videos/presentation/1080p60/partial_movie_files/Scene1_Title/2852726489_1858435655_485094421.mp4'
-file 'file:C:/DATA/coding/manim_tutorial/media/videos/presentation/1080p60/partial_movie_files/Scene1_Title/2852726489_3949485345_405195375.mp4'
-file 'file:C:/DATA/coding/manim_tutorial/media/videos/presentation/1080p60/partial_movie_files/Scene1_Title/2852726489_3374156955_2017736435.mp4'
-file 'file:C:/DATA/coding/manim_tutorial/media/videos/presentation/1080p60/partial_movie_files/Scene1_Title/2852726489_2514011427_3701096873.mp4'
-file 'file:C:/DATA/coding/manim_tutorial/media/videos/presentation/1080p60/partial_movie_files/Scene1_Title/2852726489_2856549841_3855930986.mp4'
-file 'file:C:/DATA/coding/manim_tutorial/media/videos/presentation/1080p60/partial_movie_files/Scene1_Title/2852726489_3705287040_3107043701.mp4'
