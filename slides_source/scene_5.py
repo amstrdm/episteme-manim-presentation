@@ -1,5 +1,30 @@
 from manim import *
 
+import manim.mobject.geometry.tips as tips
+def add_tip(
+    line,
+    shorten=True,
+    tip_shape: type[tips.ArrowTip] | None = None,
+    tip_length: float | None = None,
+    tip_width: float | None = None,
+):
+    tip = line.get_unpositioned_tip(
+        tip_length=tip_length,
+        tip_shape = tip_shape,
+        tip_width = tip_width,
+    )
+    tipangle = Line(tip.base, tip.tip_point).get_angle()
+    angle = Line(line.point_from_proportion(0.999),line.point_from_proportion(1.0)).get_angle()
+    tip.rotate(angle-tipangle,about_point=tip.base)
+    tip.shift(line.get_end()-tip.tip_point)
+    if shorten==True:
+        points = line.get_all_points()
+        points[-1]=tip.base
+        line.set_points(points)
+    line.add(tip)
+    return line
+Line.add_tip = add_tip
+
 def Scene5_Scraping(self):
     # Slide Header
     scraping_t = Text("Backend - Scraping", font_size=100).scale(0.48)
@@ -67,24 +92,24 @@ def Scene5_Scraping(self):
 
     # Code Snippet for Seekingalpha
     seekingalpha_code_str = """
-        # --- Conceptual Snippet: Seeking Alpha API Request Flow ---
+        # --- Konzept Snippet: Seeking Alpha API Anfrage Flow ---
 
-        # 1. Fetch a list of Article IDs for a given stock ticker
+        # 1. Abrufen einer Liste von Artikel-IDs für einen bestimmten Ticker
         GET /analysis/v2/list?id=YOUR_STOCK_TICKER&size=NUM_POSTS
 
-        # --- Then, for each 'article_id' obtained from the list above: ---
+        # --- Dann, für jede „article_id“ aus der obigen Liste: ---
 
-        # 2. Retrieve detailed information for that specific article
+        # 2. Detaillierte Informationen zum jeweiligen Artikel abrufen
         GET /analysis/v2/get-details?id=SINGLE_ARTICLE_ID
 
-        # 3. Fetch the comments associated with that article:
-        #    a. First, get a list of all comment IDs for the article
+        # 3. Abrufen der Kommentare des Artikels:
+        #    a. Zuerst die Liste aller Kommentar IDs anfragen
                 GET /comments/v2/list?id=SINGLE_ARTICLE_ID&sort=-top_parent_id
 
-        #    b. Then, get the actual content for a selection of those comment IDs
+        #    b. Dann den Inhalt besagter Kommentare abrufen
                 GET /comments/get-contents?id=SINGLE_ARTICLE_ID&comment_ids=COMMENT_ID_1,COMMENT_ID_2,...
 
-        # --- End Loop ---    
+        # --- Ende der Schleife ---    
     """
     seekingalpha_code = Code(
         code_string=seekingalpha_code_str,
@@ -147,17 +172,17 @@ def Scene5_Scraping(self):
     p1_r = np.array([p0_r[0], response_code.get_left()[1], 0])
     p2_r = response_code.get_left()
 
-    reddit_req_arrow = Arrow(buff=0.2).set_points_as_corners([p0_r, p1_r, p2_r])
+    reddit_req_arrow = Line(buff=0.2).set_points_as_corners([p0_r, p1_r, p2_r]).add_tip(tip_shape=ArrowTriangleFilledTip, tip_length=0.15)
     
     # SeekingAlpha Arrow Points
     p0_s = seekingalpha_code.get_bottom() + RIGHT
     p1_s = np.array([p0_s[0], response_code.get_right()[1], 0])
     p2_s = response_code.get_right()
 
-    seekingalpha_req_arrow = Arrow(buff=0.2).set_points_as_corners([p0_s, p1_s, p2_s])
+    seekingalpha_req_arrow = Line(buff=0.2).set_points_as_corners([p0_s, p1_s, p2_s]).add_tip(tip_shape=ArrowTriangleFilledTip, tip_length=0.15)
     
     # Animate Arrows
-    self.play(GrowArrow(reddit_req_arrow), GrowArrow(seekingalpha_req_arrow))
+    self.play(Create(reddit_req_arrow), Create(seekingalpha_req_arrow))
     self.next_slide()
 
     self.play(response_code.animate.center().scale(1.4))
@@ -166,3 +191,4 @@ def Scene5_Scraping(self):
     self.play(
         response_code.animate.scale(1/1.4).to_edge(DOWN)
     )
+    self.next_slide()
