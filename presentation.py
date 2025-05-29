@@ -2,7 +2,7 @@ from manim import *
 from manim_slides import Slide
 
 from slides_source.shared import PresentationColors
-from slides_source import scene_1, scene_2, scene_3, scene_4, scene_5
+from slides_source import scene_1, scene_2, scene_3, scene_4, scene_5, scene_6
 
 
 
@@ -21,4 +21,5 @@ class Presentation(Slide):
         # scene_2.Scene2_Introduction(self)
         # scene_3.Scene3_Goals_and_Functionalities(self)
         # scene_4.Scene4_Technology_Stack(self)
-        scene_5.Scene5_Scraping(self)
+        # scene_5.Scene5_Scraping(self)
+        scene_6.Scene6_Database(self)
