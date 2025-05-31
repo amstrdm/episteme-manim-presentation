@@ -17,6 +17,7 @@ To bypass this we set thet text to a large font size and scale accordingly.
 class Presentation(Slide):
     skip_reversing = True
     def construct(self):
+        self.wait_time_between_slides = 0.1
         # scene_1.Scene1_Title(self)
         # scene_2.Scene2_Introduction(self)
         # scene_3.Scene3_Goals_and_Functionalities(self)
