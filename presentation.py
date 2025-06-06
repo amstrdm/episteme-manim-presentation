@@ -22,7 +22,7 @@ class Presentation(Slide):
         scene_2.Scene2_Goals_and_Functionalities(self)
         scene_3.Scene3_Technology_Stack(self)
         scene_4.Scene_4_Cosine_Similarity(self)
-        
+        scene_5.Scene_5_Stock_Recommendations(self)
 
         scene_8_b_database.Scene8_Bonus_Database(self)
         scene_9_b_analysis_endpoints.Scene9_Bonus_Analysis_Pipeline(self)

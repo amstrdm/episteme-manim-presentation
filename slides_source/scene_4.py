@@ -304,3 +304,6 @@ def Scene_4_Cosine_Similarity(self):
         .shift(DOWN * 1)  # ← shift down by 0.5 units
 
     self.play(Write(legend))
+    self.next_slide()
+
+    self.wipe(self.mobjects, direction=UP)
